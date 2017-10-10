@@ -3,9 +3,20 @@
 
 
 {% block content %}
-
-<p>The current weather for {{ response.name }}is:</p>
-<p>Temperature: {{ response.main.temp}} &#8457;</p>
+<div class="container-fluid">
+  <div class="row" style="margin:100px 0">
+    <div class="col-4 mx-auto">
+      <div class="">
+        <h3>The current weather for {{ response.name }} is <strong>{{ response.weather[0].main }}</strong></h3>
+        <p></p>
+        <p>Temperature: {{ response.main.temp}} &#8457;</p>
+        <p>High Temperature: {{ response.main.temp_max}} &#8457;</p>
+        <p>Low Temperature: {{ response.main.temp_min}} &#8457;</p>
+        <p>Humidity: {{response.main.humidity}} %</p>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 {% endblock %}

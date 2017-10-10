@@ -3,9 +3,11 @@ import os
 import tornado.ioloop
 import tornado.web
 import tornado.log
-
+import datetime
 import requests
 import json
+
+from models import Weather
 
 from jinja2 import \
   Environment, PackageLoader, select_autoescape
@@ -32,20 +34,40 @@ class MainHandler(TemplateHandler):
 
     # get city name
         city = self.get_body_argument('city')
-    # lookup the weather
-        url = "http://api.openweathermap.org/data/2.5/weather"
+        city = city.title()
+        old = datetime.datetime.utcnow() - datetime.timedelta(minutes=15)
+        print(city)
 
-        querystring = {"q":city,"APIKEY":"2d9a500b15c2b6ea12cd0298f2df8696",'units':'imperial'}
+        try:
+            weatherdata = Weather.select().where(Weather.city == city).where(Weather.created >= old).get()
+            print(weatherdata)
 
-        headers = {
-            'cache-control': "no-cache",
-            'postman-token': "078aecaa-358e-d124-4994-e3ff366a0a3a"
-            }
+        except:
+            url = "http://api.openweathermap.org/data/2.5/weather"
+            querystring = {"q":city,"APIKEY":"2d9a500b15c2b6ea12cd0298f2df8696",'units':'imperial'}
+            headers = {
+                'cache-control': "no-cache",
+                'postman-token': "078aecaa-358e-d124-4994-e3ff366a0a3a"
+                }
 
-        r = requests.request("GET", url, headers=headers, params=querystring)
-        r = json.loads(r.text)
-    # render the weather data
-        self.render_template('results.html',{'response': r})
+            r = requests.request("GET", url, headers=headers, params=querystring)
+            weatherdata = Weather.create(city=city,
+            weather_data = r.json())
+        template = ENV.get_template('results.html')
+        self.write(template.render({'response': weatherdata.weather_data}))
+
+
+
+            # self.render_template('results.html',{'response': r,})
+
+
+        # clouds = r.text.weather[0].temp
+        # temp = r.text.weather[0].temp
+        # r = json.loads(r.text)
+        # render the weather data
+        # self.render_template('results.html',{'response': r,})
+
+
 def make_app():
   return tornado.web.Application([
     (r"/", MainHandler),
