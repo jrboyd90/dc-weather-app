@@ -5,5 +5,3 @@ python-dotenv
 requests
 peewee
 psycopg2
-urllib
-re
