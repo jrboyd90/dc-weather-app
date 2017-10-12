@@ -47,7 +47,7 @@ class MainHandler(TemplateHandler):
       self.render_template("index.html", {})
 
 
-    def post (self):
+    def post(self):
 
         # get city name
         city = self.get_body_argument('city')
