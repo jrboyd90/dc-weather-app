@@ -8,7 +8,7 @@ from playhouse.postgres_ext import JSONField
 DB = connect(
   os.environ.get(
     'DATABASE_URL',
-    'postgres://localhost:5432/weather'
+    'postgres://postgres:9f1b4792f2f746f5a185de5733f6df5f@dokku-postgres-weather:5432/weather'
   )
 )
 class BaseModel (peewee.Model):
