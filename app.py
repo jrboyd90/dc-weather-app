@@ -69,7 +69,7 @@ class MainHandler(TemplateHandler):
 #class for finding location of client
 class LocationHandler (TemplateHandler):
     def post(self):
-        x_real_ip = self.request.headers.get("X-Real-IP")
+        x_real_ip = self.request.headers.get("X-Forwarded-For")
         remote_ip = x_real_ip or self.request.remote_ip
         url = f'http://ipinfo.io/{remote_ip}/json'
         if remote_ip.startswith(('192.', '127.', '10.')):
